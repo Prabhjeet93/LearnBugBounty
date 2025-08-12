@@ -12,3 +12,75 @@ PORT    STATE    SERVICE
 80/tcp  open     http
 443/tcp open     https
 
+
+1. Fingerprint the Web Application
+Use tools like:
+whatweb https://smetrics.barracuda.com
+
+
+Or:
+nmap -p 80,443 --script http-enum,ssl-cert smetrics.barracuda.com
+
+
+This helps identify:
+- Web server type (Apache, nginx, etc.)
+- CMS or frameworks (WordPress, Drupal, etc.)
+- SSL certificate details (issuer, expiration, SANs)
+
+🧪 2. Run Nuclei for Vulnerability Scanning
+echo "https://smetrics.barracuda.com" | nuclei -t vulnerabilities/ -severity high,critical
+
+
+Or run full template scan:
+echo "https://smetrics.barracuda.com" | nuclei -t ~/nuclei-templates/
+
+
+This checks for:
+- Known CVEs
+- Misconfigurations
+- Exposed panels
+- Subdomain takeovers
+
+🕵️‍♂️ 3. Check for Subdomain Takeover
+Since there are multiple IPs associated with this subdomain, check if any are pointing to unused services like AWS, Azure, GitHub Pages, etc.
+Use:
+subjack -w subdomains.txt -t 100 -timeout 30 -ssl -v -c fingerprints.json
+
+
+
+🔐 4. Test for Web Vulnerabilities
+Use tools like:
+- Burp Suite (manual testing)
+- ffuf or dirsearch for directory brute-forcing:
+ffuf -u https://smetrics.barracuda.com/FUZZ -w wordlist.txt
+
+
+Look for:
+- Login pages
+- Admin panels
+- API endpoints
+- Misconfigured headers (CORS, CSP, etc.)
+
+📦 5. Check for Sensitive Info or Misconfigurations
+Use:
+curl -I https://smetrics.barracuda.com
+
+
+Look for:
+- Server headers
+- X-Powered-By
+- CORS misconfigurations
+- Verbose error messages
+
+🧠 6. Explore JavaScript Files
+Use a browser or tools like linkfinder to extract endpoints from JS:
+python3 linkfinder.py -i https://smetrics.barracuda.com -o cli
+
+
+
+🧰 7. Check for Rate Limiting, Authentication Bypass, etc.
+If there are login or API endpoints:
+- Try brute-force with hydra or wfuzz
+- Test for rate-limiting
+- Look for IDOR (Insecure Direct Object Reference)
+
