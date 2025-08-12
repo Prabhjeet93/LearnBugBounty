@@ -1,3 +1,14 @@
 Target 
 
 Recon -> 
+
+Nmap scan report for smetrics.barracuda.com (63.140.38.77)
+Host is up (0.036s latency).
+Other addresses for smetrics.barracuda.com (not scanned): 63.140.39.244 63.140.38.204 63.140.39.68 63.140.39.114 63.140.39.123 63.140.38.130 63.140.38.107 63.140.38.248 63.140.39.154
+rDNS record for 63.140.38.77: ip-63-140-38-77.data.adobedc.net
+
+PORT    STATE    SERVICE
+22/tcp  filtered ssh
+80/tcp  open     http
+443/tcp open     https
+
